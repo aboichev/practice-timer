@@ -3,6 +3,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import copy from 'rollup-plugin-copy';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -12,7 +13,7 @@ export default {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: 'public/build/bundle.js'
+		file: 'dist/js/bundle.js'
 	},
 	plugins: [
 		svelte({
@@ -21,8 +22,8 @@ export default {
 			// we'll extract any component CSS out into
 			// a separate file — better for performance
 			css: css => {
-				css.write('public/build/bundle.css');
-			}
+				css.write('dist/css/bundle.css');
+			}		
 		}),
 
 		// If you have external dependencies installed from
@@ -35,6 +36,14 @@ export default {
 			dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
 		}),
 		commonjs(),
+		// copy files to dist
+		copy({
+			targets: [
+				{ src: 'src/index.html', dest: 'dist' },
+				{ src: ['assets/fonts/arial.woff', 'assets/fonts/arial.woff2'], dest: 'dist/fonts' },
+				{ src: 'assets/images/**/*', dest: 'dist/images' }
+			]
+		}),
 
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated
@@ -42,7 +51,7 @@ export default {
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production
-		!production && livereload('public'),
+		!production && livereload('dist'),
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
