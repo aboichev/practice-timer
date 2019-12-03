@@ -1,7 +1,7 @@
 {
-  "name": "Getting Started Example",
+  "name": "Practice Timer",
   "version": "1.0",
-  "description": "Build an Extension!",
+  "description": "Control your timing during a practice session.",
   "permissions": ["activeTab", "declarativeContent", "storage"],
   "options_page": "options.html",
   "background": {

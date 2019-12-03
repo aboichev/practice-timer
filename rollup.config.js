@@ -40,8 +40,17 @@ export default {
 		copy({
 			targets: [
 				{ src: 'src/index.html', dest: 'dist' },
-				{ src: ['assets/fonts/arial.woff', 'assets/fonts/arial.woff2'], dest: 'dist/fonts' },
-				{ src: 'assets/images/**/*', dest: 'dist/images' }
+				{ src: ['src/options.html',
+						'src/options.js',
+						'src/background.js',
+						'src/popup.html',
+						'src/popup.js',
+						'src/global.css',
+						'src/favicon.png',
+						'src/manifest.json'
+						],
+				  dest: 'dist' },
+				{ src: 'src/images/**/*', dest: 'dist/images' }
 			]
 		}),
 

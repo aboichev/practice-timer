@@ -24,7 +24,7 @@ changeColor.onclick = function(e) {
 };
 
 function updateUI (data) {
-  chrome.extension.getBackgroundPage().console.log('Got data', data);
+  console.log('Got data', data);
 
   if (data === undefined || data === null) {
     chrome.storage.sync.get(['timerState'], (storageData) => updateUI(storageData.timerState));
@@ -37,7 +37,7 @@ function updateUI (data) {
     timerBtn.innerHTML = 'Resume';
   }
 
-  chrome.extension.getBackgroundPage().console.log('isRunning', timerState.isRunning, timerState.isPaused);
+  console.log('isRunning', timerState.isRunning, timerState.isPaused);
 
   if (timerState.isRunning && !timerState.isPaused) {
     timerBtn.innerHTML = 'Pause';
@@ -53,7 +53,7 @@ let timerState = {};
 const timerBtn = document.getElementById('timerBtn');
 
 timerBtn.onclick = function(e) {
-  chrome.extension.getBackgroundPage().console.log('Start Button clicked');
+  console.log('Start Button clicked');
 
   if (!timerState.isRunning && !timerState.isPaused) {
     chrome.runtime.sendMessage({
@@ -78,8 +78,10 @@ timerBtn.onclick = function(e) {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   if (request.cmd == "REFRESH_UI") {    
-    updateUI();
+    
   }
 });
 
-updateUI();
+chrome.runtime.sendMessage({
+  cmd: 'OPEN_APP'
+}, updateUI());

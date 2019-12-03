@@ -6,7 +6,6 @@ chrome.runtime.onInstalled.addListener(function() {
   });
 });
 
-
 let timerState = { isRunning: false, isPaused: false };
 
 function startTimer(duration) {
@@ -47,6 +46,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (request.cmd == "RESUME_TIMER") {
         timerState.isPaused = false;
         chrome.storage.sync.set({'timerState': timerState}, sendResponse(timerState));
+      }
+
+      if (request.cmd == "OPEN_APP") {
+        chrome.tabs.create({url: chrome.extension.getURL("index.html"), active: false});
       }
   }
 );
