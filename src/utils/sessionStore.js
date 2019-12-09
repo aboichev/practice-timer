@@ -4,7 +4,8 @@ function buildSessionStore() {
 
     const defaultSession = [{
         id: 1,
-        name: 'My Daily Practice'
+        name: 'My Daily Practice',
+        exercises: []
     }];
 
     let items = [];
@@ -57,8 +58,29 @@ function buildSessionStore() {
         delete: (id) => {
             items = items.filter(i => i.id !== id);
             save();        
+        },
+        updateExercises: (exercises) => {
+            for (const session of items) {
+                // remove exercises which are no longer associated
+                session.exercises = session.exercises.filter(
+                                        x => exercises.find(
+                                                y => 
+                                                y.id === x 
+                                                && y.sessions.find(z => session.id === z) !== undefined
+                                            ) !== undefined);
+                // add exercises not found in session
+                const exercisesBySessionId = exercises.filter(x => x.sessions.find(y => y === session.id));
+                for (const exercise of exercisesBySessionId) {
+                    const notInSession = session.exercises.find(x => x === exercise.id) === undefined;
+                    if (notInSession) {
+                        session.exercises = [...session.exercises, exercise.id];
+                    }
+                }
+            }
+            save();
         }
 	};
 }
 
 export const sessions = buildSessionStore();
+

@@ -1,28 +1,11 @@
 <script>
     import { exercises } from '../utils/exerciseStore.js'
+    import { sessions } from '../utils/sessionStore.js'
     import { fade } from 'svelte/transition';
 
     export let id = null;
-
-    const isNew = id == null;
-    let item = null;
-
-    const empty = {
-        name: null,
-        description: null,
-        duration: {
-            mins: 5,
-            secs: 0
-        },
-        bpm: 120
-    };
-
-    if (isNew) {
-        item = empty;
-    }
-    else {
-        item = $exercises.find(x => x.id.toString() === id) || empty;
-    }   
+    
+    const item = exercises.getById(id);
 
     function save () {
         exercises.upsert(item);
@@ -42,7 +25,7 @@
 
 <form>
     <fieldset in:fade="{{ duration: 900 }}">
-    <legend>{`${isNew ? 'Add New' : 'Edit'} Exercise`}</legend>
+    <legend>{`${id == null ? 'Add New' : 'Edit'} Exercise`}</legend>
         <label for="name">Name:</label>
         <input id="name" type='text' placeholder="Exercise Name" bind:value={item.name} />
         <span>This is a required field.</span>
@@ -59,10 +42,18 @@
         <input id="link1" type='text' placeholder="https://www.youtube.com/" bind:value={item.link1} />
         <label for="link2">Hyperlink 2:</label>
         <input id="link2" type='text' placeholder="https://www.youtube.com/" bind:value={item.link2} />
-        
+
+        <label for="addToSession">Session(s):</label>
+        <select id="addToSession" multiple bind:value={item.sessions}>
+            {#each $sessions as item (item.id)}
+            <option value="{item.id}">{item.name}</option>
+            {:else}
+            <option value="1">Default</option>
+            {/each} 
+        </select>
         <div class="panel">
             <button on:click="{save}">Save</button>
-            {#if !isNew}
+            {#if !(id === null)}
             <button on:click="{deleteItem}">Delete</button>
             {/if}
             <button on:click="{backToList}">Cancel</button>  
