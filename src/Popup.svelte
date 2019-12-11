@@ -1,1 +1,5 @@
-<h1>Hello</h1>
+<script>
+    import SessionInProgress from './components/SessionInProgress.svelte'
+</script>
+
+<SessionInProgress />

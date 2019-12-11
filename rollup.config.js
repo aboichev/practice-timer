@@ -7,13 +7,13 @@ import copy from 'rollup-plugin-copy';
 
 const production = !process.env.ROLLUP_WATCH;
 
-export default {
-	input: 'src/popup.js',
+export default [{
+	input: 'src/main.js',
 	output: {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: 'dist/js/popup-bundle.js'
+		file: 'dist/js/bundle.js'
 	},
 	plugins: [
 		svelte({
@@ -35,20 +35,55 @@ export default {
 			browser: true,
 			dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
 		}),
+		commonjs()
+	],
+	watch: {
+		clearScreen: false
+	}
+},
+// popup bundle
+{
+	input: 'src/popup.js',
+	output: {
+		sourcemap: true,
+		format: 'iife',
+		name: 'app',
+		file: 'dist/js/popup-bundle.js'
+	},
+	plugins: [
+		svelte({
+			// enable run-time checks when not in production
+			dev: !production,
+			// we'll extract any component CSS out into
+			// a separate file — better for performance
+			css: css => {
+				css.write('dist/css/popup-bundle.css');
+			}		
+		}),
+
+		// If you have external dependencies installed from
+		// npm, you'll most likely need these plugins. In
+		// some cases you'll need additional configuration —
+		// consult the documentation for details:
+		// https://github.com/rollup/rollup-plugin-commonjs
+		resolve({
+			browser: true,
+			dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
+		}),
 		commonjs(),
 		// copy files to dist
 		copy({
 			targets: [
-				{ src: 'src/index.html', dest: 'dist' },
-				{ src: ['src/options.html',
+				{ src: ['src/index.html',
+						'src/options.html',
 						'src/options.js',
 						'src/background.js',
 						'src/popup.html',
-						'src/global.css',
 						'src/favicon.png',
 						'src/manifest.json'
 						],
 				  dest: 'dist' },
+				{ src: 'src/global.css', dest: 'dist/css'},
 				{ src: 'src/images/**/*', dest: 'dist/images' }
 			]
 		}),
@@ -68,7 +103,7 @@ export default {
 	watch: {
 		clearScreen: false
 	}
-};
+}];
 
 function serve() {
 	let started = false;
