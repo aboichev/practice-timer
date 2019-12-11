@@ -54,12 +54,21 @@
             [sessionExercises[i+1], sessionExercises[i]] = [sessionExercises[i], sessionExercises[i+1]]
         }
     }
+
+    function startSession() {
+        window.location.hash = `#/sessions/practice/${item.id}`;
+    }
 </script>
 
 <div in:fade="{{ duration: 900 }}">
     <button on:click={save}>Save</button>
-    <button on:click={deleteItem}>Delete</button>
+    {#if !isNew}
+        <button on:click={deleteItem}>Delete</button>
+    {/if}
     <button on:click={backToList}>Cancel</button>
+    {#if !isNew && sessionExercises.length > 0}
+    <button on:click={startSession}>Start Practice Session Now!</button>
+    {/if}
     <label for="name">Name:</label>
     <input id="name" type='text' bind:value={item.name} />
     <div>

@@ -4,6 +4,7 @@ import ExerciseList from '../components/ExerciseList.svelte'
 import ExerciseForm from '../components/ExerciseForm.svelte'
 import SessionList from '../components/SessionList.svelte'
 import SessionForm from '../components/SessionForm.svelte'
+import SessionInProgress from '../components/SessionInProgress.svelte'
 
 const defaultRoute = {
     tabName: 'recent',
@@ -47,6 +48,12 @@ export const activeRoute = readable(defaultRoute, function start(set) {
                 tabName: 'sessions',
                 component: SessionForm,
                 props: { id: hash.substring('#/sessions/edit/'.length) }
+            });
+        } else if (hash.startsWith('#/sessions/practice/')) {
+            set({
+                tabName: 'sessions',
+                component: SessionInProgress,
+                props: { id: hash.substring('#/sessions/practice/'.length) }
             });
         }
     };

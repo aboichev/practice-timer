@@ -8,12 +8,12 @@ import copy from 'rollup-plugin-copy';
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
-	input: 'src/main.js',
+	input: 'src/popup.js',
 	output: {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: 'dist/js/bundle.js'
+		file: 'dist/js/popup-bundle.js'
 	},
 	plugins: [
 		svelte({
@@ -44,7 +44,6 @@ export default {
 						'src/options.js',
 						'src/background.js',
 						'src/popup.html',
-						'src/popup.js',
 						'src/global.css',
 						'src/favicon.png',
 						'src/manifest.json'

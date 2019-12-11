@@ -40,6 +40,7 @@
         <input id="bpm" type="range" min=30 step=5 max=300 bind:value={item.bpm} /> <span>{item.bpm} BPM</span>
         <label for="link1">Hyperlink 1:</label>
         <input id="link1" type='text' placeholder="https://www.youtube.com/" bind:value={item.link1} />
+        <textarea id="embed1" placeholder="embed code" bind:value={item.embed1}></textarea>
         <label for="link2">Hyperlink 2:</label>
         <input id="link2" type='text' placeholder="https://www.youtube.com/" bind:value={item.link2} />
 
@@ -84,4 +85,3 @@
         margin-top: 2em;
     }
 </style>
-
