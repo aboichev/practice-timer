@@ -3,32 +3,58 @@
     import { fade } from 'svelte/transition';
     import Card from './Card.svelte';
 
-    let currentIndex = 0;
     let currentExercise = null;
-    let currentSession = null;
+
+    let timerState = {
+        text: ''
+    };
 
     function init() {
-        currentSession = state.currentSession.get();
-        if (currentSession.inProgress) {
-            currentIndex = 0;
-            currentExercise = currentSession.listOfExercises[currentIndex];
+
+        currentExercise = state.currentSession.get();
+        
+        if (!currentExercise.inProgress) {
+            return;
         }
+
+        // start a timer using 
+        const seconds = currentExercise.duration.mins * 60 + currentExercise.duration.secs;
+
+        chrome.runtime.sendMessage({
+            cmd: 'GET_TIMER'
+        },
+        (newState) => {
+            timerState = newState;
+
+            if (!timerState.isStarted) {
+                chrome.runtime.sendMessage({
+                    cmd: 'START_TIMER',
+                    durationInSecs: seconds
+                });
+            }
+        });
     }
 
-    function skipToNext() {
-        if (hasMore()) {
-            currentIndex += 1;
-            currentExercise = currentSession.listOfExercises[currentIndex];
-        }
+    function pause() {
+        chrome.runtime.sendMessage({
+            cmd: 'PAUSE_TIMER'
+        });
     }
 
-    function hasMore() {
-        return currentIndex + 1 < currentSession.listOfExercises.length;
+     function resume() {
+        chrome.runtime.sendMessage({
+            cmd: 'RESUME_TIMER'
+        });
     }
 
-    function stop() {
-        state.currentSession.end();
-        init();
+    function next() {
+        chrome.runtime.sendMessage({
+            cmd: 'RESET_TIMER'
+        },
+        () => {
+            state.currentSession.next();
+            init();
+        });
     }
 
     function startSession(id) {
@@ -36,17 +62,32 @@
         init();
     }
 
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        if (request.cmd == "REFRESH_UI") {
+            console.log(request.cmd, request.timerState);
+            timerState = request.timerState;
+        }
+        return Promise.resolve("Dummy response to keep the console quiet");
+    });
+
     init();
  
 </script>
 
 <div in:fade="{{ duration: 900 }}">
-    {#if currentSession.inProgress}
-        {#if hasMore()}
-            <button on:click={skipToNext}>Next Exercise</button>
+    {#if currentExercise.inProgress }
+
+        {#if timerState.isStarted && !timerState.isFinished && !timerState.isPaused}
+            <button on:click={pause}>Pause</button>
         {/if}
-        <button on:click={stop}>End Session</button>
-        <h3>{currentSession.name}</h3>
+        {#if timerState.isPaused }
+            <button on:click={resume}>Resume</button>
+        {/if}
+
+        <button on:click={next}>Continue</button>
+
+        <span>{timerState.text}</span>
+        <h3>{currentExercise.sessionName}</h3>
         <article>
             <h3>{currentExercise.name}</h3>
             {#if currentExercise.description}

@@ -41,6 +41,27 @@ export default [{
 		clearScreen: false
 	}
 },
+// background bundle
+{
+	input: 'src/background.js',
+	output: {
+		sourcemap: true,
+		format: 'iife',
+		name: 'background',
+		file: 'dist/js/background.js'
+	},
+	plugins: [
+		svelte({
+			// enable run-time checks when not in production
+			dev: !production
+		}),
+		resolve({
+			browser: true,
+			dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
+		}),
+		commonjs()
+	],	
+},
 // popup bundle
 {
 	input: 'src/popup.js',

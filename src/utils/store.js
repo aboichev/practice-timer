@@ -14,7 +14,8 @@ const empty = {
     exercises: [],
     currentSession: {
         inProgress: false,
-        sessionId: null
+        sessionId: null,
+        exerciseIndex: 0
     }
 };
 
@@ -94,6 +95,22 @@ function getCurrentSession(state) {
     };
 }
 
+function getCurrentExercise(state) {
+    if (!state.currentSession.inProgress) {
+        return { 
+            inProgress: false
+        };
+    }
+
+    const session = getCurrentSession(state);
+
+    return { 
+        ...session.listOfExercises[state.currentSession.exerciseIndex],
+        sessionName: session.name,
+        inProgress: session.inProgress
+    };
+}
+
 function buildStore() {
 	const state = readFromStorage();
 
@@ -169,23 +186,31 @@ function buildStore() {
             },
         },
         currentSession: {
-            get: () => getCurrentSession(state),
+            get: () => getCurrentExercise(state),
             start: (id) => {
                 state.currentSession = {
                     inProgress: true,
-                    sessionId: id
+                    sessionId: id,
+                    exerciseIndex: 0
                 };
                 saveToStorage(state);
                 set(readFromStorage());
             },
-            end: () => {
-                state.currentSession = {
-                    inProgress: false,
-                    sessionId: null
-                };
+            next: () => {
+                const session = getCurrentSession(state);
+                if (state.currentSession.exerciseIndex < session.listOfExercises.length - 1) {
+                    state.currentSession.exerciseIndex += 1;
+                }
+                else {
+                    state.currentSession = {
+                        inProgress: false
+                    };
+                }
+
                 saveToStorage(state);
                 set(readFromStorage());
-                return getCurrentSession(state);
+
+                return getCurrentExercise(state);
             }
         }
 	};
