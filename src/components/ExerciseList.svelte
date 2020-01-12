@@ -1,5 +1,5 @@
 <script>
-    import { exercises } from '../utils/exerciseStore.js'
+    import { state } from '../utils/store.js'
     import { fade } from 'svelte/transition';
     import Card from './Card.svelte';
 </script>
@@ -8,7 +8,7 @@
     <div>
         <a href="#/exercises/new">Add New</a>
     </div>
-    {#each $exercises as item (item.id)}
+    {#each $state.exercises as item (item.id)}
         <Card href="#/exercises/edit/{item.id}">
             <span slot="title">{item.name}</span>
             <span slot="midColumn">

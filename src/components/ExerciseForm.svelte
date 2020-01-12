@@ -1,19 +1,18 @@
 <script>
-    import { exercises } from '../utils/exerciseStore.js'
-    import { sessions } from '../utils/sessionStore.js'
+    import { state } from '../utils/store.js'
     import { fade } from 'svelte/transition';
 
     export let id = null;
     
-    const item = exercises.getById(id);
+    const item = state.exercises.getById(id);
 
     function save () {
-        exercises.upsert(item);
+        state.exercises.upsert(item);
         backToList();
     }
 
     function deleteItem () {
-        exercises.delete(item.id);
+        state.exercises.delete(item.id);
         backToList();
     }
 
@@ -46,7 +45,7 @@
 
         <label for="addToSession">Session(s):</label>
         <select id="addToSession" multiple bind:value={item.sessions}>
-            {#each $sessions as item (item.id)}
+            {#each $state.sessions as item (item.id)}
             <option value="{item.id}">{item.name}</option>
             {:else}
             <option value="1">Default</option>

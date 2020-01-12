@@ -49,11 +49,10 @@ export const activeRoute = readable(defaultRoute, function start(set) {
                 component: SessionForm,
                 props: { id: hash.substring('#/sessions/edit/'.length) }
             });
-        } else if (hash.startsWith('#/sessions/practice/')) {
+        } else if (hash === '#/sessions/practice') {
             set({
                 tabName: 'sessions',
-                component: SessionInProgress,
-                props: { id: hash.substring('#/sessions/practice/'.length) }
+                component: SessionInProgress
             });
         }
     };

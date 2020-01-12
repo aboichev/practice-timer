@@ -1,10 +1,27 @@
 <script>
     import { fade } from 'svelte/transition';
-    export let href = '#';
+    export let href = null;
 </script>
 
 <article transition:fade|local>
-    <a href="{href}">
+    {#if href}
+        <a href="{href}">
+            <div class="row">
+                <div class="firstCol">
+                    <slot name="title"></slot>
+                </div>
+                <div class="middleCol">
+                    <slot name="midColumn"></slot>
+                </div>
+                <div class="lastCol">
+                    <slot name="lastColumn"></slot>
+                </div>                    
+            </div>
+            <div>
+                <slot name="description"></slot>
+            </div>
+        </a>
+    {:else}
         <div class="row">
             <div class="firstCol">
                 <slot name="title"></slot>
@@ -19,7 +36,7 @@
         <div>
             <slot name="description"></slot>
         </div>
-    </a>
+    {/if}
 </article>
 
 <style>

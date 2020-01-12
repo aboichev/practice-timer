@@ -8,7 +8,7 @@ import copy from 'rollup-plugin-copy';
 const production = !process.env.ROLLUP_WATCH;
 
 export default [{
-	input: 'src/main.js',
+	input: 'src/options.js',
 	output: {
 		sourcemap: true,
 		format: 'iife',
@@ -76,7 +76,6 @@ export default [{
 			targets: [
 				{ src: ['src/index.html',
 						'src/options.html',
-						'src/options.js',
 						'src/background.js',
 						'src/popup.html',
 						'src/favicon.png',
