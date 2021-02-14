@@ -18,36 +18,37 @@
 </script>
 
 <div class="row">
-    <div class="arrows">
-        <div>
-            <button on:click={handleUp}>
-                <svg width=48 height=12 viewBox="0 0 4 1">
-                    <polygon fill="black" points="2,0 4,1 0,1" />
-                </svg>
-            </button>
-        </div>
-        <div>
-            <button on:click={handleDown}>
-                <svg width=48 height=12 viewBox="0 0 4 1">
-                    <polygon fill="black" points="2,1 4,0 0,0" />
-                </svg>
-            </button>
-        </div>
-    </div>
-    <div class="content">
+    <div class="left">
         <slot></slot>
+    </div>
+    <div class="right">
+        [ <button on:click={handleUp}>Move Up</button> ]
+        [ <button on:click={handleDown}>Move Down</button> ]
     </div>
 </div>
 
 <style>
-    .row {
-       display: flex;
-       flex-direction: row;
+    .row button {
+        background: #e4e2e2;
+        border: none;
+        padding: 0;
+        color: rgb(0,80,160);
     }
-    .content {
-        margin-right: auto;
+    .row button:hover {
+        text-decoration: underline;
+        cursor: pointer;
     }
-    .arrows {
-        width: 200px;
+
+    .left {
+        float: left;
+        width: 80%;
     }
+
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
 </style>

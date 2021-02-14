@@ -1,6 +1,7 @@
+import { Metronome } from './utils/metronome.js';
 
 chrome.runtime.onInstalled.addListener(function() {
-  console.log("Prictice Timer is installed");
+  console.log("Prictice Timer is installed.");
 });
 
 let timerState = {
@@ -9,6 +10,10 @@ let timerState = {
    isFinished: false,
    text: ''
 };
+
+const metronome = new Metronome();
+
+let openTabs = [];
 
 let timer;
 
@@ -46,22 +51,29 @@ function startTimer(duration) {
       }
       chrome.runtime.sendMessage({ cmd: 'REFRESH_UI', timerState});
   }, 1000);
+  chrome.runtime.sendMessage({ cmd: 'REFRESH_UI', timerState});
 };
 
-chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+function resetTimer() {
+  clearInterval(timer);
+  timerState = {
+    isStarted: false,
+    isPaused: false,
+    isFinished: false,
+    text: '0:00'
+  };
+  chrome.runtime.sendMessage({ cmd: 'REFRESH_UI', timerState});
+}
 
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+      console.log('request', request);
       if (request.cmd == "RESET_TIMER") {
-        clearInterval(timer);
-        timerState = {
-          isStarted: false,
-          isPaused: false,
-          isFinished: false,
-          text: ''
-        };
-        chrome.browserAction.setBadgeText({text: ''});
+        resetTimer();
       }
 
       if (request.cmd == "START_TIMER") {
+        resetTimer();
+        timerState.id = request.id;
         startTimer(request.durationInSecs);
       }
 
@@ -73,8 +85,31 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         timerState.isPaused = false;
       }
 
-      if (request.cmd == "OPEN_APP") {
+      if (request.cmd == "SET_METRONOME") {
+        metronome.play(request.bpm);
+      }
+
+      if (request.cmd == "STOP_METRONOME") {
+        metronome.stop();
+      }
+
+      if (request.cmd == "OPEN_SETTINGS") {
         chrome.tabs.create({url: chrome.extension.getURL("options.html"), active: false});
+      }
+
+      if (request.cmd == "OPEN_TABS") {
+          chrome.tabs.create({ url: request.url, active: request.active}, (tab) => openTabs.push(tab));
+      }
+
+      if (request.cmd == "CLOSE_TABS") {
+        for (let i = 0; i < openTabs.length; i += 1) {
+          chrome.tabs.get(openTabs[i].id, (result) => {
+            if (result) {
+              chrome.tabs.remove(result.id);
+            }
+          });
+        }
+        openTabs = [];
       }
 
       sendResponse(timerState);

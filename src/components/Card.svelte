@@ -1,73 +1,52 @@
 <script>
     import { fade } from 'svelte/transition';
-    export let href = null;
 </script>
 
 <article transition:fade|local>
-    {#if href}
-        <a href="{href}">
-            <div class="row">
-                <div class="firstCol">
-                    <slot name="title"></slot>
-                </div>
-                <div class="middleCol">
-                    <slot name="midColumn"></slot>
-                </div>
-                <div class="lastCol">
-                    <slot name="lastColumn"></slot>
-                </div>                    
-            </div>
-            <div>
+    <div class="row">
+        <div class="firstCol">
+            <slot name="firstColumn"></slot>
+        </div>
+        <div class="middleCol">
+            <slot name="midColumn"></slot>
+            <div class="bottom">
                 <slot name="description"></slot>
             </div>
-        </a>
-    {:else}
-        <div class="row">
-            <div class="firstCol">
-                <slot name="title"></slot>
-            </div>
-            <div class="middleCol">
-                <slot name="midColumn"></slot>
-            </div>
-            <div class="lastCol">
-                <slot name="lastColumn"></slot>
-            </div>                    
         </div>
-        <div>
-            <slot name="description"></slot>
+        <div class="lastCol">
+            <slot name="lastColumn"></slot>
         </div>
-    {/if}
+    </div>
 </article>
 
 <style>
-    article a {
-        text-decoration: none;
-        color: #63abfd;
-    }
-	article a:hover {
-		text-decoration: none;
-	}
-
-	article a:visited {
-		color: #63abfd;
-    }    
-    
     article {
-        margin-top: 0.6em;
-        border-bottom: 1px solid rgb(185, 185, 185);
+        border-bottom: solid 1px white;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .row {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
     }
 
-    .row {
-       display: flex;
-       flex-direction: row;
-    }
     .firstCol {
-        margin-right: auto;
+        width: 200px;
     }
     .middleCol {
-        width: 200px;
+        display: flex;
+        flex-direction: column;
+        flex-basis: 70%;
+        flex: 1;
     }
     .lastCol {
         width: 100px;
+    }
+    .bottom {
+        padding-top: 10px;
+        color: #b9b9b9;
+        font-size: 1.0em;
     }
 </style>

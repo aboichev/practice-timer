@@ -1,7 +1,18 @@
 <script>
-    import { state } from '../utils/store.js'
+    import { title, state } from '../utils/store.js'
     import { fade } from 'svelte/transition';
     import Card from './Card.svelte';
+    import Metronome from './Metronome.svelte';
+    import { onMount } from 'svelte';
+
+	onMount(async () => {
+        title.set('My Exercises');
+    });
+
+    function save (item) {
+        console.log('new bpm', item.bpm)
+        state.exercises.upsert(item);
+    }
 </script>
 
 <div in:fade="{{ duration: 900 }}">
@@ -10,15 +21,22 @@
     </div>
     {#each $state.exercises as item (item.id)}
         <Card href="#/exercises/edit/{item.id}">
-            <span slot="title">{item.name}</span>
-            <span slot="midColumn">
-                {item.duration.mins} mins
+            <span slot="firstColumn">
+                <strong>{item.duration.mins}</strong> mins
                 {#if item.duration.secs}
-                    {item.duration.secs} secs
+                    &nbsp; <strong>{item.duration.secs}</strong> secs
+                {/if}
+                {#if !item.hideBpm}
+                    <Metronome excersise={item} on:bpmChange={() => save(item)} />
                 {/if}
             </span>
-            <span slot="lastColumn">{item.bpm} bpm</span>
-            <span slot="description">{item.description || ''}</span>
+            <span slot="midColumn">
+                <strong>{item.name}</strong>
+            </span>
+            <span slot="lastColumn">[ <a href="#/exercises/edit/{item.id}">Edit</a> ]</span>
+            <span slot="description">
+                {item.description || ''}
+            </span>
         </Card>
     {/each}
 </div>

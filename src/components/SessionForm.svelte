@@ -1,28 +1,33 @@
 <script>
-    import { state } from '../utils/store.js';
+    import { title, state } from '../utils/store.js';
     import { fade } from 'svelte/transition';
-    import Sortable from './Sortable.svelte';
     import Card from './Card.svelte';
+    import { onMount } from 'svelte';
 
     export let id = null;
 
     const isNew = id == null;
-
     const item = state.sessions.getById(id);
 
-    function save() {
-       state.sessions.upsert(item);
-       backToList();
+	onMount(async () => {
+        title.set(item.name);
+	});
+
+    function save () {
+        state.sessions.upsert(item);
+        title.set(item.name);
     }
 
     function deleteItem() {
-       exercises.removeSession(item.id);
-       sessions.delete(item.id);
-       backToList();
+       if (confirm('Are You Sure? This action cannot be undone.')) {
+        state.sessions.delete(item.id);
+        navigateBack();
+       }
     }
  
-    function backToList() {
-        window.location.hash = '#/sessions';
+    function navigateBack() {
+        save();
+        window.history.back();
     }
 
     function moveExercise(direction, i) {
@@ -33,45 +38,70 @@
 
         if (direction === 'up') {
             [item.listOfExercises[i], item.listOfExercises[i-1]] = [item.listOfExercises[i-1], item.listOfExercises[i]]
+            state.sessions.upsert(item);
+            return;
         }
 
-        if (direction === 'down') {
-            [item.listOfExercises[i+1], item.listOfExercises[i]] = [item.listOfExercises[i], item.listOfExercises[i+1]]
-        }
+        [item.listOfExercises[i+1], item.listOfExercises[i]] = [item.listOfExercises[i], item.listOfExercises[i+1]]
+        state.sessions.upsert(item);
     }
 
     function startSession() {
         state.currentSession.start(item.id);
         window.location.hash = `#/sessions/practice`;
     }
+
 </script>
 
 <div in:fade="{{ duration: 900 }}">
-    <button on:click={save}>Save</button>
+    <input id="name" type='text' bind:value={item.name} on:keyup={save} />
+    <button on:click={navigateBack}>Back</button>
     {#if !isNew}
-        <button on:click={deleteItem}>Delete</button>
+        <button on:click={deleteItem}>Remove This Session</button>
     {/if}
-    <button on:click={backToList}>Cancel</button>
     {#if !isNew && item.listOfExercises.length > 0}
     <button on:click={startSession}>Start Practice Session Now!</button>
     {/if}
-    <label for="name">Name:</label>
-    <input id="name" type='text' bind:value={item.name} />
+    {#if !isNew}
+        <h2>Exercises:</h2>
+    {/if}
     <div>
     {#each item.listOfExercises as item, i (item.id)}
-        <Sortable on:move={(event) => moveExercise(event.detail.direction, i)}>
-            <Card href="#/exercises/edit/{item.id}">
-                <span slot="title">{item.name}</span>
-                <span slot="midColumn">
-                    {item.duration.mins} mins
-                    {#if item.duration.secs}
-                        {item.duration.secs} secs
-                    {/if}
-                </span>
-                <span slot="lastColumn">{item.bpm} bpm</span>
-                <span slot="description">{item.description || ''}</span>
-            </Card>
-        </Sortable>
+        <Card>
+            <span slot="firstColumn">
+                    <strong>{item.duration.mins}</strong> mins
+                {#if item.duration.secs}
+                    &nbsp;<strong>{item.duration.secs}</strong> secs
+                {/if}
+                {#if !item.hideBpm}
+                    @ <strong>{item.bpm}</strong> BPM
+                {/if}
+            </span>
+            <span slot="midColumn"><strong>{item.name}</strong></span>
+            <span slot="lastColumn" class="buttons">
+                [ <a href="#/exercises/edit/{item.id}">Edit</a> ]
+                [ <button on:click={() => moveExercise('up', i)}>Move Up</button> ]
+                [ <button on:click={() => moveExercise('down', i)}>Move Down</button> ]
+            </span>
+            <span slot="description">{item.description || ''}</span>
+        </Card>
     {/each}
     </div>
 </div>
+
+<style>
+    #name {
+        width: 20em;
+    }
+    .buttons button {
+        background: #e4e2e2;
+        border: none;
+        padding: 0;
+        color: rgb(13, 80, 160);
+    }
+    
+    .buttons button:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+</style>

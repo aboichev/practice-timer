@@ -97,7 +97,6 @@ export default [{
 			targets: [
 				{ src: ['src/index.html',
 						'src/options.html',
-						'src/background.js',
 						'src/popup.html',
 						'src/favicon.png',
 						'src/manifest.json'

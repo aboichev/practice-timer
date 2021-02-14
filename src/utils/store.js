@@ -1,15 +1,12 @@
 import { writable } from 'svelte/store';
 
-
-
 const defaultSession = {
-    id: 1,
-    name: 'Default',
+    name: 'Untitled Session',
     description: '',
     exercises: []
 };
 
-const empty = {
+const defaultState = {
 	sessions: [defaultSession],
     exercises: [],
     currentSession: {
@@ -19,7 +16,7 @@ const empty = {
     }
 };
 
-const emptyExcercise = {
+const defaultExcercise = {
     name: '', 
     description: '',
     duration: {
@@ -27,13 +24,17 @@ const emptyExcercise = {
         secs: 0,
     },
     bpm: 60,
+    startMetronome: false,
+    hideBpm: false,
+    link1: null,
+    link1ActiveTab: false,
+    link2: null,
+    link2ActiveTab: false,
     sessions: []
 };
 
-
-
 function readFromStorage() {
-	let state = empty;
+	let state = Object.assign({}, defaultState);
 	try {
         const stored = localStorage.getItem('state');
         state = stored ? JSON.parse(localStorage.getItem('state')) : empty;		
@@ -81,8 +82,20 @@ function syncSessions(state) {
     }
 }
 
+function getDefaultItem(defaultItem, existingItems, propName = 'name') {
+    const newItem = Object.assign({}, defaultItem);
+    
+    const numOfDefaultNames = existingItems.filter(x => x[propName].startsWith(defaultItem[propName])).length;
+    if (numOfDefaultNames > 0) {
+        newItem[propName] = `${newItem[propName]} ${numOfDefaultNames + 1}`;
+    }
+
+    return newItem;
+}
+
 function getSessionById(state, id) {
-    const item = state.sessions.find(x => x.id == id) || defaultSession;
+    const item = state.sessions.find(x => x.id == id) || getDefaultItem(defaultSession, state.sessions);
+
     item.listOfExercises = item.exercises.map(exerciseId => state.exercises.find(x => x.id === exerciseId));
     return item;
 }
@@ -128,7 +141,7 @@ function buildStore() {
         },
         exercises: {
             getById: (id) => {
-                return state.exercises.find(x => x.id == id) || emptyExcercise;
+                return state.exercises.find(x => x.id == id) || Object.assign({}, defaultExcercise);
             },
             upsert: (item) => {
                 if (!item.id) {
@@ -136,7 +149,7 @@ function buildStore() {
                     state.exercises = [item, ...state.exercises];
                 }
                 else {
-                    state.excercises = state.exercises.map(i => {
+                    state.exercises = state.exercises.map(i => {
                         if (i.id == item.id) {
                             i = item;
                         }
@@ -175,10 +188,11 @@ function buildStore() {
                 }
                 saveToStorage(state);
                 set(readFromStorage());
-            },      
+                item = getSessionById(state, item.id);
+            },
             delete: (id) => {
                 state.sessions = state.sessions.filter(i => i.id !== id);
-                for(const exercise of state.excercises) {
+                for(const exercise of state.exercises) {
                     exercise.sessions = exercise.sessions.filter(x => x !== id);
                 }
                 saveToStorage(state);
@@ -211,9 +225,19 @@ function buildStore() {
                 set(readFromStorage());
 
                 return getCurrentExercise(state);
+            },
+            stop: () => {
+                state.currentSession = {
+                    inProgress: false,
+                    exerciseIndex: 0,
+                }
+                saveToStorage(state);
+                set(readFromStorage());
             }
         }
 	};
 }
 
 export const state = buildStore();
+
+export const title = writable('');

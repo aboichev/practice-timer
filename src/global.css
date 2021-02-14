@@ -50,24 +50,20 @@ input[type="range"] {
 }
 
 button {
-	color: #333;
-	background-color: #f4f4f4;
-	outline: none;
+	background-color: #8ca7d1;
+	border: none; 
+	color: white; 
+	padding: 4px 10px;
+	font-size: 26px;
+	cursor: pointer;
 }
 
-button:disabled {
-	color: #999;
-}
+button:hover {
+	background-color: #ccc;
+  }
 
-button:not(:disabled):active {
-	background-color: #ddd;
-}
 
-button:focus {
-	border-color: #666;
-}
-
-h1 {
+h1, h2 {
 	margin-top: 0;
 	color: #63abfd;
 	text-transform: uppercase;

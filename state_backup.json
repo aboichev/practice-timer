@@ -1,0 +1,152 @@
+{
+   "sessions":[
+      {
+         "id":1,
+         "name":"Daily Guitar Practice",
+         "description":"",
+         "exercises":[
+            5,
+            6,
+            4,
+            3
+         ],
+         "listOfExercises":[
+
+         ]
+      }
+   ],
+   "exercises":[
+      {
+         "name":"Sweep Picking - Arpeggios, inversions, rolls, stretches",
+         "description":"",
+         "duration":{
+            "mins":5,
+            "secs":0
+         },
+         "bpm":60,
+         "startMetronome":true,
+         "hideBpm":false,
+         "link1":"https://www.youtube.com/watch?v=5fNfxE6tL8k",
+         "link1ActiveTab":false,
+         "link2":"https://www.patreon.com/posts/weekend-wankshop-32910264",
+         "link2ActiveTab":false,
+         "sessions":[
+
+         ],
+         "id":7
+      },
+      {
+         "name":"Pentatonic Perfection - Weekend Wankshop 256 Tabs",
+         "description":"Have you ever wondered how the pentatonic shred masters like Eric Johnson, Zakk Wylde, Eric Gales, and Joe Bonamassa get so much shred milage out of the simple minor pentatonic scale? You're not alone! ",
+         "duration":{
+            "mins":5,
+            "secs":0
+         },
+         "bpm":75,
+         "startMetronome":true,
+         "hideBpm":false,
+         "link1":"https://www.youtube.com/watch?v=4hEStnP_EKc&t=89",
+         "link1ActiveTab":false,
+         "link2":"https://www.patreon.com/posts/weekend-wankshop-32148460",
+         "link2ActiveTab":false,
+         "sessions":[
+            1
+         ],
+         "id":6
+      },
+      {
+         "name":"The Secrets of Alternate Picking Perfection! WW255",
+         "description":"This lick is based around a Paul Gilbert-style sequence in A Lydian. It utilizes string changes that happen after down AND upstrokes. You're gonna get it ripping in no time!",
+         "duration":{
+            "mins":5,
+            "secs":0
+         },
+         "bpm":60,
+         "startMetronome":false,
+         "hideBpm":false,
+         "link1":"https://www.youtube.com/watch?v=nHsERthHjh4&t=1m10s",
+         "link1ActiveTab":false,
+         "link2":"https://www.patreon.com/posts/wankshop-255-tab-31775663",
+         "link2ActiveTab":false,
+         "sessions":[
+            1
+         ],
+         "id":5
+      },
+      {
+         "name":"Shred Rehab Picking Hand Workout!",
+         "description":"The key is speed bursts, not marathons of straight 16th notes! Its the best way to regain your speed while also minimizing tension and bad habits in both hands. It really works! Try it out for a couple days, and i guarantee you'll be picking at faster tempos while also being more relaxed than ever.",
+         "duration":{
+            "mins":5,
+            "secs":0
+         },
+         "bpm":70,
+         "startMetronome":true,
+         "hideBpm":false,
+         "sessions":[
+            1
+         ],
+         "link1":"https://www.youtube.com/watch?v=WdJurN8CUy0&t=6m55s",
+         "id":4,
+         "link1ActiveTab":false
+      },
+      {
+         "name":"Two Way Pickslanting",
+         "description":"Two Way Pickslanting Secrets! Weekend Wankshop 124",
+         "duration":{
+            "mins":5,
+            "secs":0
+         },
+         "bpm":70,
+         "sessions":[
+            1
+         ],
+         "link1":"https://www.youtube.com/watch?v=9B4Ta6tyxr4&t=4m17s",
+         "id":3,
+         "link2":"",
+         "autoStartMetronome":"undefined",
+         "startMetronome":true,
+         "hideBpm":false,
+         "link1ActiveTab":false
+      },
+      {
+         "name":"Downpicking speed",
+         "description":"Someday you can play Seek And Destroy",
+         "duration":{
+            "mins":5,
+            "secs":0
+         },
+         "bpm":180,
+         "sessions":[
+
+         ],
+         "id":2,
+         "link2":"",
+         "link1":"https://www.youtube.com/watch?v=dx5YI_mRXlo&list=PLR-s-bpe_DUH0RnKTzh8okJsutK8spZV0&index=15&t=0s",
+         "link1ActiveTab":false,
+         "link2ActiveTab":false
+      },
+      {
+         "name":"Fingers Stretch Warm Up",
+         "description":"Do this in the beginning of every practice session",
+         "duration":{
+            "mins":5,
+            "secs":0
+         },
+         "bpm":65,
+         "sessions":[
+
+         ],
+         "id":1,
+         "link1":"https://www.youtube.com/watch?v=FmGcNRZsZQE&t=2m5s",
+         "link2":"",
+         "hideBpm":true,
+         "startMetronome":false,
+         "link1ActiveTab":false,
+         "link2ActiveTab":false
+      }
+   ],
+   "currentSession":{
+      "inProgress":false
+   }
+}
